@@ -5,15 +5,17 @@ using UnityEngine;
 public class Rope : MonoBehaviour {
 
     internal Rigidbody mybody;
-     
+
+
+   // public int childCount;
 	internal void Start () {
         this.gameObject.AddComponent<Rigidbody>();
         this.mybody = this.gameObject.GetComponent<Rigidbody>();
         this.mybody.isKinematic = true;
 
-        int childcount = this.transform.childCount;
+        int childCount = this.transform.childCount;
 
-        for(int i = 0; i < childcount; i++)
+        for(int i = 0; i < childCount; i++)
         {
             Transform trans = this.transform.GetChild(i);
 

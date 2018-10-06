@@ -4,33 +4,41 @@ using UnityEngine;
 
 public class CraneMover : MonoBehaviour {
 
+    private Rigidbody myBody;
+    public float force;
 	// Use this for initialization
 	void Start () {
-		
+       myBody =  this.GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-        if(Input.GetKey(KeyCode.UpArrow))
+        myBody.velocity = new Vector3(0, 0, 0);
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            this.transform.position += new Vector3(0,0,10) * Time.deltaTime;
+            //this.transform.position += new Vector3(0,0,10) * Time.deltaTime;
+            myBody.velocity = new Vector3(0, 0, 0);
+            myBody.AddForce(new Vector3(0, 0, 1) * force);
         }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            this.transform.position += new Vector3(0, 0, -10) * Time.deltaTime;
+            myBody.velocity = new Vector3(0, 0, 0);
+            myBody.AddForce(new Vector3(0, 0, -1) * force);
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            this.transform.position += new Vector3(10, 0, 0) * Time.deltaTime;
+            myBody.velocity = new Vector3(0, 0, 0);
+            myBody.AddForce(new Vector3(1, 0, 0) * force);
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            this.transform.position += new Vector3(-10, 0, 0) * Time.deltaTime;
+            myBody.velocity = new Vector3(0, 0, 0);
+            myBody.AddForce(new Vector3(-1, 0, 0) * force);
         }
 
+      
     }
 }
