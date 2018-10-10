@@ -14,16 +14,38 @@ public class Magnet : MonoBehaviour {
 
     public float multiplier;
      Rigidbody myBody;
+    Collider myCollider;
 
 	// Use this for initialization
 	void Start () {
        myBody = this.GetComponent<Rigidbody>();
         playerController = ReInput.players.GetPlayer(playerId);
+        myCollider = this.GetComponent<Collider>();
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Collided");
+
+        if(!hasCar)
+        {
+            Debug.Log("Activated magnet");
+            if (other.gameObject.tag == "Car")
+            {
+                Debug.Log("Car Pick Up");
+                car = other.gameObject.transform;
+
+                //other.gameObject.transform.parent = this.gameObject.transform.GetChild(0).transform;
+                car.position = this.gameObject.transform.GetChild(0).transform.position;
+                car.rotation = this.gameObject.transform.GetChild(0).transform.rotation;
+                car.GetComponent<Rigidbody>().isKinematic = true;
+                car.gameObject.transform.parent = this.gameObject.transform.GetChild(0).transform;
+               // car.localPosition = Vector3.zero;
+               // car.gameObject.transform.parent = this.gameObject.transform.GetChild(0).transform;
+
+                hasCar = true;
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Space) && !hasCar || playerController.GetButtonDown("PickUp") && !hasCar)
         {
@@ -31,8 +53,10 @@ public class Magnet : MonoBehaviour {
             if (other.gameObject.tag == "Car")
             {
                 Debug.Log("Car Pick Up");
-                other.gameObject.transform.parent = this.gameObject.transform;
-                car = other.gameObject.transform;
+               
+                car = other.gameObject.transform.GetChild(0).transform;
+                other.gameObject.transform.parent = this.gameObject.transform.GetChild(0).transform;
+              
                 hasCar = true;
             }
         }
@@ -47,12 +71,14 @@ public class Magnet : MonoBehaviour {
 
             if (car != null)
             {
-
                 //Debug.Log(other.gameObject.transform.parent);
                 Debug.Log("Release");
+                car.GetComponent<Rigidbody>().isKinematic = false;
                 car.gameObject.transform.parent = null;
                 car.GetComponent<Rigidbody>().velocity = myBody.velocity * multiplier;
+                myCollider.enabled = false;
                 hasCar = false;
+               
             }
         }
     }
