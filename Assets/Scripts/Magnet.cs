@@ -16,8 +16,11 @@ public class Magnet : MonoBehaviour {
      Rigidbody myBody;
     Collider myCollider;
 
-	// Use this for initialization
-	void Start () {
+    public float magnetYMin = 0, magnetYMax = 10;
+
+
+    // Use this for initialization
+    void Start () {
        myBody = this.GetComponent<Rigidbody>();
         playerController = ReInput.players.GetPlayer(playerId);
         myCollider = this.GetComponent<Collider>();
@@ -53,10 +56,8 @@ public class Magnet : MonoBehaviour {
             if (other.gameObject.tag == "Car")
             {
                 Debug.Log("Car Pick Up");
-               
                 car = other.gameObject.transform.GetChild(0).transform;
                 other.gameObject.transform.parent = this.gameObject.transform.GetChild(0).transform;
-              
                 hasCar = true;
             }
         }
@@ -77,9 +78,25 @@ public class Magnet : MonoBehaviour {
                 car.gameObject.transform.parent = null;
                 car.GetComponent<Rigidbody>().velocity = myBody.velocity * multiplier;
                 myCollider.enabled = false;
+                StartCoroutine(SwitchCollider());
                 hasCar = false;
-               
             }
+         
         }
+
+        //clamp magnet
+        Quaternion currentRot = transform.rotation;
+
+        currentRot.y = Mathf.Clamp(currentRot.y , magnetYMin, magnetYMax);
+        transform.rotation = currentRot;
+        
+    }
+
+    IEnumerator SwitchCollider()
+    {
+       yield return new WaitForSeconds(1.0f);
+        Debug.Log("CanPickUpAgain");
+        myCollider.enabled = true;
+        
     }
 }
